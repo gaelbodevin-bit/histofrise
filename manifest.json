@@ -1,0 +1,39 @@
+{
+  "name": "HistoFrise",
+  "short_name": "HistoFrise",
+  "description": "Jeu de frise chronologique : du Big Bang à aujourd'hui !",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0a0a0f",
+  "theme_color": "#0a0a0f",
+  "orientation": "portrait-primary",
+  "lang": "fr",
+  "icons": [
+    {
+      "src": "public/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "public/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable any"
+    }
+  ],
+  "categories": ["games", "education"],
+  "screenshots": [],
+  "shortcuts": [
+    {
+      "name": "Jouer",
+      "url": "/?action=play",
+      "description": "Lancer une partie directement"
+    },
+    {
+      "name": "Classement",
+      "url": "/?action=leaderboard",
+      "description": "Voir le classement mondial"
+    }
+  ]
+}

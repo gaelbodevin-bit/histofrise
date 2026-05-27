@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="description" content="HistoFrise — Place les événements historiques sur une frise du Big Bang à aujourd'hui !" />
+  <meta name="theme-color" content="#0a0a0f" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <title>HistoFrise 🌍</title>
+
+  <!-- PWA -->
+  <link rel="manifest" href="manifest.json" />
+  <link rel="apple-touch-icon" href="public/icon-192.png" />
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="src/styles/main.css" />
+
+  <!-- Google AdSense — remplacer ca-pub-XXXXXXXXXX par ton ID -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXX" crossorigin="anonymous"></script>
+
+  <!-- Firebase SDK -->
+  <script type="importmap">
+  {
+    "imports": {
+      "firebase/app":       "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js",
+      "firebase/auth":      "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js",
+      "firebase/firestore": "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js"
+    }
+  }
+  </script>
+</head>
+<body>
+
+<!-- ════════════════════════════════════════════════════════
+     APP
+════════════════════════════════════════════════════════ -->
+<div id="app">
+
+  <!-- ── Header ──────────────────────────────────────────── -->
+  <header id="header">
+    <a class="logo" href="#" id="logo-link">Histo<span>Frise</span></a>
+
+    <div class="header-right">
+      <button class="btn btn-ghost" id="btn-leaderboard-header">🏆 Classement</button>
+      <button class="btn btn-multi btn-ghost" id="btn-multi-header" style="padding:8px 14px;font-size:0.82rem">👥 Multi</button>
+      <div id="user-area">
+        <button class="btn btn-google" id="btn-login" style="font-size:0.85rem;padding:8px 14px;">
+          <svg width="18" height="18" viewBox="0 0 18 18"><path fill="#4285F4" d="M17.64 9.2a10.34 10.34 0 0 0-.16-1.84H9v3.48h4.84a4.14 4.14 0 0 1-1.8 2.72v2.26h2.92a8.78 8.78 0 0 0 2.68-6.62z"/><path fill="#34A853" d="M9 18a8.6 8.6 0 0 0 5.96-2.18l-2.92-2.26a5.4 5.4 0 0 1-8.05-2.84H.96v2.34A9 9 0 0 0 9 18z"/><path fill="#FBBC05" d="M3.99 10.72A5.41 5.41 0 0 1 3.71 9c0-.59.1-1.17.28-1.72V4.94H.96A9 9 0 0 0 0 9c0 1.45.35 2.82.96 4.06l3.03-2.34z"/><path fill="#EA4335" d="M9 3.58a4.86 4.86 0 0 1 3.44 1.35l2.58-2.58A8.64 8.64 0 0 0 9 0 9 9 0 0 0 .96 4.94L3.99 7.28A5.36 5.36 0 0 1 9 3.58z"/></svg>
+          Connexion
+        </button>
+        <div id="user-card" class="user-card hidden">
+          <div id="user-avatar" class="user-avatar">?</div>
+          <span id="user-name">Joueur</span>
+          <button id="btn-logout" class="btn-ghost" style="border:none;padding:2px 6px;font-size:0.75rem;">✕</button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ── Bannière pub ─────────────────────────────────────── -->
+  <div id="ad-banner">
+    <ins class="adsbygoogle"
+         style="display:block;width:100%;height:60px"
+         data-ad-client="ca-pub-XXXXXXXXXX"
+         data-ad-slot="XXXXXXXXXX"
+         data-ad-format="horizontal"></ins>
+    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+  </div>
+
+  <!-- ════════════════════════════════════════════════════
+       ÉCRAN 1 — ACCUEIL
+  ════════════════════════════════════════════════════ -->
+  <section id="screen-home" class="screen active">
+    <h1 class="hero-title">Du Big Bang<br>à aujourd'hui</h1>
+    <p class="hero-sub">
+      Place des événements historiques sur la frise du temps en 30 secondes.
+      Plus tu es précis, plus tu scores !
+    </p>
+
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <div class="hero-stat-value">30s</div>
+        <div class="hero-stat-label">par question</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-value">8</div>
+        <div class="hero-stat-label">questions</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-value">13,8 Ga</div>
+        <div class="hero-stat-label">de frise</div>
+      </div>
+    </div>
+
+    <div class="hero-actions">
+      <button class="btn btn-primary" id="btn-play" style="font-size:1.1rem;padding:16px;">
+        🎮 Jouer
+      </button>
+      <button class="btn btn-multi" id="btn-multiplayer">
+        👥 Multijoueur
+      </button>
+      <button class="btn btn-secondary" id="btn-leaderboard-home">
+        🏆 Classement
+      </button>
+    </div>
+
+    <div style="margin-top:8px;font-size:0.78rem;color:var(--text-muted)">
+      🔒 Connexion Google nécessaire pour sauvegarder ton score
+    </div>
+  </section>
+
+  <!-- ════════════════════════════════════════════════════
+       ÉCRAN 2 — JEU
+  ════════════════════════════════════════════════════ -->
+  <section id="screen-game" class="screen">
+
+    <!-- En-tête jeu -->
+    <div class="game-header">
+      <div class="game-meta">
+        <span id="difficulty-badge" class="badge badge-easy">Facile</span>
+        <span id="category-badge" class="badge" style="background:var(--bg-surface);border:1px solid var(--border);color:var(--text-dim)">histoire</span>
+      </div>
+      <div class="game-score-area">
+        <span class="score-label">Score</span>
+        <span class="score-value" id="score-display">0</span>
+      </div>
+      <button class="btn btn-ghost" id="btn-quit" style="font-size:0.8rem;padding:6px 12px">✕ Quitter</button>
+    </div>
+
+    <!-- Timer -->
+    <div class="timer-area">
+      <div class="timer-num" id="timer-display">30</div>
+      <div class="timer-track">
+        <div class="timer-bar" id="timer-bar"></div>
+      </div>
+      <span class="question-num" id="question-number">1 / 8</span>
+    </div>
+
+    <!-- Question -->
+    <div class="question-card">
+      <div class="question-text" id="question-text">Chargement…</div>
+      <div class="question-hint" id="question-hint"></div>
+    </div>
+
+    <!-- Frise -->
+    <div class="timeline-wrap" id="timeline-wrap">
+      <canvas id="timeline-canvas"></canvas>
+    </div>
+    <p class="timeline-instructions">
+      🖱️ Clic pour placer · Scroll/Pincer pour zoomer · Glisser pour naviguer
+    </p>
+
+    <!-- Réponse sélectionnée -->
+    <div class="selected-year-display" id="selected-year-display">
+      Cliquez sur la frise pour placer votre réponse
+    </div>
+
+    <!-- Actions -->
+    <div class="game-actions">
+      <button class="btn btn-primary" id="btn-confirm" disabled>
+        ✅ Confirmer ma réponse
+      </button>
+    </div>
+
+    <!-- Feedback (caché jusqu'à la réponse) -->
+    <div id="feedback-panel" class="feedback-panel hidden">
+      <div class="feedback-title" id="feedback-title">Excellent !</div>
+      <div class="feedback-points" id="feedback-points">+850 pts</div>
+      <div class="feedback-details">
+        <div><strong id="feedback-correct"></strong></div>
+        <div id="feedback-guess"></div>
+        <div id="feedback-diff"></div>
+      </div>
+      <div style="display:flex;justify-content:center">
+        <button class="btn btn-primary" id="btn-next">Question suivante →</button>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- ════════════════════════════════════════════════════
+       ÉCRAN 3 — FIN DE PARTIE
+  ════════════════════════════════════════════════════ -->
+  <section id="screen-end" class="screen">
+    <div class="end-title" id="end-title">Partie terminée !</div>
+    <div style="color:var(--text-dim);font-size:0.9rem">Ton score</div>
+    <div class="end-score" id="end-score">0</div>
+    <div id="end-save-msg" style="color:var(--text-dim);font-size:0.85rem"></div>
+
+    <div class="end-history" id="end-history"></div>
+
+    <div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:8px">
+      <button class="btn btn-primary" id="btn-replay">🔄 Rejouer</button>
+      <button class="btn btn-secondary" id="btn-end-leaderboard">🏆 Classement</button>
+      <button class="btn btn-secondary" id="btn-end-home">🏠 Accueil</button>
+    </div>
+  </section>
+
+  <!-- ════════════════════════════════════════════════════
+       ÉCRAN 4 — CLASSEMENT
+  ════════════════════════════════════════════════════ -->
+  <section id="screen-leaderboard" class="screen">
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:4px">
+      <h2 style="font-family:var(--font-title);color:var(--gold);font-size:1.4rem">🏆 Classement mondial</h2>
+      <button class="btn btn-ghost" id="btn-lb-refresh" style="margin-left:auto;font-size:0.8rem">↻ Actualiser</button>
+    </div>
+    <div id="leaderboard-container">
+      <div class="lb-loading"><div class="spinner"></div><p>Chargement…</p></div>
+    </div>
+    <div style="display:flex;gap:10px;justify-content:center;margin-top:12px">
+      <button class="btn btn-primary" id="btn-lb-play">🎮 Jouer</button>
+      <button class="btn btn-secondary" id="btn-lb-home">🏠 Accueil</button>
+    </div>
+  </section>
+
+  <!-- ════════════════════════════════════════════════════
+       ÉCRAN 5 — MULTIJOUEUR
+  ════════════════════════════════════════════════════ -->
+  <section id="screen-multi" class="screen">
+    <h2 style="font-family:var(--font-title);color:var(--gold);font-size:1.4rem">👥 Multijoueur</h2>
+
+    <div class="tabs" id="multi-tabs">
+      <button class="tab active" data-tab="create">Créer une room</button>
+      <button class="tab" data-tab="join">Rejoindre</button>
+    </div>
+
+    <!-- Créer -->
+    <div id="multi-create" class="multi-panel">
+      <p style="color:var(--text-dim);font-size:0.9rem;margin-bottom:16px">
+        Crée une salle et partage le code à tes amis. La partie commence quand tout le monde est prêt.
+      </p>
+      <button class="btn btn-primary" id="btn-create-room">🚀 Créer une room</button>
+    </div>
+
+    <!-- Rejoindre -->
+    <div id="multi-join" class="multi-panel hidden">
+      <p style="color:var(--text-dim);font-size:0.9rem;margin-bottom:12px">Entre le code de la room :</p>
+      <input type="text" id="room-code-input" class="input-field" placeholder="ABCD12" maxlength="6" autocomplete="off" />
+      <div style="margin-top:12px">
+        <button class="btn btn-primary" id="btn-join-room">Rejoindre →</button>
+      </div>
+    </div>
+
+    <!-- Lobby (affiché quand dans une room) -->
+    <div id="multi-lobby" class="hidden"></div>
+
+    <div style="margin-top:12px">
+      <button class="btn btn-secondary" id="btn-multi-home">🏠 Retour</button>
+    </div>
+  </section>
+
+</div><!-- /#app -->
+
+<!-- ── Navigation mobile ─────────────────────────────────── -->
+<nav class="nav-bottom">
+  <button class="nav-item active" id="nav-home">
+    <span class="nav-item-icon">🏠</span>
+    <span>Accueil</span>
+  </button>
+  <button class="nav-item" id="nav-play">
+    <span class="nav-item-icon">🎮</span>
+    <span>Jouer</span>
+  </button>
+  <button class="nav-item" id="nav-multi">
+    <span class="nav-item-icon">👥</span>
+    <span>Multi</span>
+  </button>
+  <button class="nav-item" id="nav-lb">
+    <span class="nav-item-icon">🏆</span>
+    <span>Scores</span>
+  </button>
+</nav>
+
+<!-- ── Modale connexion requise ──────────────────────────── -->
+<div class="modal-overlay" id="modal-login">
+  <div class="modal">
+    <h2>🔐 Connexion requise</h2>
+    <p>Pour sauvegarder ton score et apparaître au classement, connecte-toi avec Google. C'est gratuit et rapide !</p>
+    <div class="modal-actions">
+      <button class="btn btn-google" id="modal-btn-login">
+        <svg width="18" height="18" viewBox="0 0 18 18"><path fill="#4285F4" d="M17.64 9.2a10.34 10.34 0 0 0-.16-1.84H9v3.48h4.84a4.14 4.14 0 0 1-1.8 2.72v2.26h2.92a8.78 8.78 0 0 0 2.68-6.62z"/><path fill="#34A853" d="M9 18a8.6 8.6 0 0 0 5.96-2.18l-2.92-2.26a5.4 5.4 0 0 1-8.05-2.84H.96v2.34A9 9 0 0 0 9 18z"/><path fill="#FBBC05" d="M3.99 10.72A5.41 5.41 0 0 1 3.71 9c0-.59.1-1.17.28-1.72V4.94H.96A9 9 0 0 0 0 9c0 1.45.35 2.82.96 4.06l3.03-2.34z"/><path fill="#EA4335" d="M9 3.58a4.86 4.86 0 0 1 3.44 1.35l2.58-2.58A8.64 8.64 0 0 0 9 0 9 9 0 0 0 .96 4.94L3.99 7.28A5.36 5.36 0 0 1 9 3.58z"/></svg>
+        Se connecter avec Google
+      </button>
+      <button class="btn btn-ghost" id="modal-btn-skip">Jouer sans compte (score non sauvegardé)</button>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════
+     SCRIPT PRINCIPAL
+════════════════════════════════════════════════════════ -->
+<script type="module">
+// ──────────────────────────────────────────────────────────
+//  IMPORTS
+// ──────────────────────────────────────────────────────────
+import { signInWithGoogle, signOutUser, onAuthChange } from "./src/auth/auth.js";
+import { Game } from "./src/game/game.js";
+import { renderLeaderboard } from "./src/components/leaderboard.js";
+import {
+  createRoom, joinRoom, listenRoom,
+  setReady, startMultiplayerGame, renderLobby
+} from "./src/components/multiplayer.js";
+import { formatYear } from "./src/game/scoring.js";
+
+// ──────────────────────────────────────────────────────────
+//  ÉTAT GLOBAL
+// ──────────────────────────────────────────────────────────
+let currentUser = null;
+let roomUnsubscribe = null;
+let currentRoomId = null;
+let game = null;
+
+// ──────────────────────────────────────────────────────────
+//  DOM REFS
+// ──────────────────────────────────────────────────────────
+const $ = id => document.getElementById(id);
+const screens = {
+  home:        $("screen-home"),
+  game:        $("screen-game"),
+  end:         $("screen-end"),
+  leaderboard: $("screen-leaderboard"),
+  multi:       $("screen-multi")
+};
+
+const ui = {
+  canvas:              $("timeline-canvas"),
+  questionText:        $("question-text"),
+  questionHint:        $("question-hint"),
+  difficultyBadge:     $("difficulty-badge"),
+  categoryBadge:       $("category-badge"),
+  timerDisplay:        $("timer-display"),
+  timerBar:            $("timer-bar"),
+  questionNumber:      $("question-number"),
+  scoreDisplay:        $("score-display"),
+  confirmBtn:          $("btn-confirm"),
+  feedbackPanel:       $("feedback-panel"),
+  feedbackTitle:       $("feedback-title"),
+  feedbackPoints:      $("feedback-points"),
+  feedbackCorrect:     $("feedback-correct"),
+  feedbackGuess:       $("feedback-guess"),
+  feedbackDiff:        $("feedback-diff"),
+  nextBtn:             $("btn-next"),
+  selectedYearDisplay: $("selected-year-display"),
+  showScreen: (name) => {
+    Object.values(screens).forEach(s => s.classList.remove("active"));
+    screens[name]?.classList.add("active");
+    // Sync nav
+    document.querySelectorAll(".nav-item").forEach(n => n.classList.remove("active"));
+    const map = { home:"nav-home", game:"nav-play", leaderboard:"nav-lb", multi:"nav-multi" };
+    if (map[name]) $(map[name])?.classList.add("active");
+  },
+  showEndScreen: (totalScore, history) => {
+    $("end-score").textContent = totalScore.toLocaleString("fr-FR");
+    $("end-title").textContent = titleForScore(totalScore);
+    $("end-save-msg").textContent = currentUser
+      ? "✅ Score sauvegardé dans le classement !"
+      : "⚠️ Connecte-toi pour sauvegarder ton score.";
+
+    const hist = $("end-history");
+    hist.innerHTML = history.map(({ question: q, guessYear, result }) => `
+      <div class="end-history-row">
+        <div>
+          <div class="end-history-q">${q.question}</div>
+          <div class="end-history-detail">
+            Bonne réponse : ${formatYear(q.year)} · Ta réponse : ${formatYear(guessYear)}
+          </div>
+        </div>
+        <div class="end-history-pts" style="color:${result.color}">+${result.points}</div>
+      </div>
+    `).join("");
+
+    ui.showScreen("end");
+  }
+};
+
+function titleForScore(score) {
+  if (score >= 7000) return "🌟 Historien de génie !";
+  if (score >= 5000) return "🎓 Excellent historien !";
+  if (score >= 3000) return "📚 Bon élève !";
+  if (score >= 1500) return "🙂 Pas mal du tout !";
+  return "📅 Continue d'apprendre !";
+}
+
+// ──────────────────────────────────────────────────────────
+//  INIT JEU
+// ──────────────────────────────────────────────────────────
+function initGame() {
+  game = new Game(ui);
+  game.setUser(currentUser);
+}
+
+// ──────────────────────────────────────────────────────────
+//  AUTH
+// ──────────────────────────────────────────────────────────
+onAuthChange(user => {
+  currentUser = user;
+  updateUserUI(user);
+  game?.setUser(user);
+});
+
+function updateUserUI(user) {
+  const card = $("user-card");
+  const loginBtn = $("btn-login");
+  if (user) {
+    card.classList.remove("hidden");
+    loginBtn.classList.add("hidden");
+    const av = $("user-avatar");
+    if (user.photoURL) {
+      av.innerHTML = `<img src="${user.photoURL}" style="width:28px;height:28px;border-radius:50%;object-fit:cover" alt="">`;
+    } else {
+      av.textContent = (user.displayName || "?")[0].toUpperCase();
+    }
+    $("user-name").textContent = user.displayName?.split(" ")[0] || "Joueur";
+  } else {
+    card.classList.add("hidden");
+    loginBtn.classList.remove("hidden");
+  }
+}
+
+// ──────────────────────────────────────────────────────────
+//  ÉVÉNEMENTS — Navigation
+// ──────────────────────────────────────────────────────────
+$("logo-link").addEventListener("click", e => { e.preventDefault(); ui.showScreen("home"); });
+$("btn-leaderboard-header").addEventListener("click", () => loadLeaderboard());
+$("btn-leaderboard-home").addEventListener("click", () => loadLeaderboard());
+$("btn-lb-home").addEventListener("click", () => ui.showScreen("home"));
+$("btn-lb-play").addEventListener("click", () => startGame());
+$("btn-multi-header").addEventListener("click", () => showMulti());
+$("btn-multiplayer").addEventListener("click", () => showMulti());
+$("btn-multi-home").addEventListener("click", () => ui.showScreen("home"));
+$("btn-lb-refresh").addEventListener("click", () => loadLeaderboard());
+$("btn-end-home").addEventListener("click", () => ui.showScreen("home"));
+$("btn-end-leaderboard").addEventListener("click", () => loadLeaderboard());
+
+// Nav mobile
+$("nav-home").addEventListener("click", () => ui.showScreen("home"));
+$("nav-play").addEventListener("click", () => startGame());
+$("nav-multi").addEventListener("click", () => showMulti());
+$("nav-lb").addEventListener("click", () => loadLeaderboard());
+
+// ──────────────────────────────────────────────────────────
+//  ÉVÉNEMENTS — Jeu
+// ──────────────────────────────────────────────────────────
+$("btn-play").addEventListener("click", () => startGame());
+
+$("btn-confirm").addEventListener("click", () => game?.confirm());
+$("btn-next").addEventListener("click", () => game?.next());
+$("btn-quit").addEventListener("click", () => {
+  game?.stop();
+  ui.showScreen("home");
+});
+$("btn-replay").addEventListener("click", () => startGame());
+
+function startGame() {
+  if (!game) initGame();
+  else game.setUser(currentUser);
+  ui.showScreen("game");
+  // Petit délai pour que le canvas soit visible
+  setTimeout(() => game.start(), 50);
+}
+
+// ──────────────────────────────────────────────────────────
+//  CONNEXION / DÉCONNEXION
+// ──────────────────────────────────────────────────────────
+$("btn-login").addEventListener("click", () => openLoginModal());
+$("btn-logout").addEventListener("click", async () => {
+  await signOutUser();
+});
+
+$("modal-btn-login").addEventListener("click", async () => {
+  closeLoginModal();
+  try {
+    await signInWithGoogle();
+  } catch (e) {
+    alert("Erreur de connexion. Vérifiez votre configuration Firebase.");
+  }
+});
+$("modal-btn-skip").addEventListener("click", () => {
+  closeLoginModal();
+  startGame();
+});
+
+function openLoginModal() {
+  $("modal-login").classList.add("open");
+}
+function closeLoginModal() {
+  $("modal-login").classList.remove("open");
+}
+$("modal-login").addEventListener("click", e => {
+  if (e.target === $("modal-login")) closeLoginModal();
+});
+
+// ──────────────────────────────────────────────────────────
+//  CLASSEMENT
+// ──────────────────────────────────────────────────────────
+async function loadLeaderboard() {
+  ui.showScreen("leaderboard");
+  await renderLeaderboard($("leaderboard-container"), currentUser);
+}
+
+// ──────────────────────────────────────────────────────────
+//  MULTIJOUEUR
+// ──────────────────────────────────────────────────────────
+function showMulti() {
+  if (!currentUser) {
+    openLoginModal();
+    return;
+  }
+  ui.showScreen("multi");
+}
+
+// Tabs
+document.querySelectorAll(".tab").forEach(tab => {
+  tab.addEventListener("click", () => {
+    document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
+    tab.classList.add("active");
+    document.querySelectorAll(".multi-panel").forEach(p => p.classList.add("hidden"));
+    $("multi-" + tab.dataset.tab).classList.remove("hidden");
+  });
+});
+
+// Créer room
+$("btn-create-room").addEventListener("click", async () => {
+  if (!currentUser) { openLoginModal(); return; }
+  try {
+    $("btn-create-room").disabled = true;
+    $("btn-create-room").textContent = "Création…";
+    const roomId = await createRoom(currentUser);
+    currentRoomId = roomId;
+    listenToRoom(roomId);
+  } catch (e) {
+    alert("Erreur : " + e.message);
+  } finally {
+    $("btn-create-room").disabled = false;
+    $("btn-create-room").textContent = "🚀 Créer une room";
+  }
+});
+
+// Rejoindre room
+$("btn-join-room").addEventListener("click", async () => {
+  const code = $("room-code-input").value.trim().toUpperCase();
+  if (code.length < 4) { alert("Code invalide"); return; }
+  if (!currentUser) { openLoginModal(); return; }
+  try {
+    $("btn-join-room").disabled = true;
+    await joinRoom(code, currentUser);
+    currentRoomId = code;
+    listenToRoom(code);
+  } catch (e) {
+    alert("Erreur : " + e.message);
+  } finally {
+    $("btn-join-room").disabled = false;
+  }
+});
+
+function listenToRoom(roomId) {
+  if (roomUnsubscribe) roomUnsubscribe();
+  roomUnsubscribe = listenRoom(roomId, (data) => {
+    const lobby = $("multi-lobby");
+    lobby.classList.remove("hidden");
+    $("multi-create").classList.add("hidden");
+    $("multi-join").classList.add("hidden");
+
+    if (data.status === "playing") {
+      if (roomUnsubscribe) { roomUnsubscribe(); roomUnsubscribe = null; }
+      startGame();
+      return;
+    }
+
+    renderLobby(lobby, data, currentUser.uid, {
+      onReady: (isReady) => setReady(roomId, currentUser.uid, isReady),
+      onStart: () => startMultiplayerGame(roomId)
+    });
+  });
+}
+
+// ──────────────────────────────────────────────────────────
+//  SERVICE WORKER
+// ──────────────────────────────────────────────────────────
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("sw.js").catch(() => {});
+}
+</script>
+</body>
+</html>
