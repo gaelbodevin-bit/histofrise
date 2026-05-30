@@ -3,23 +3,18 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <meta name="description" content="HistoFrise — Place les événements historiques sur une frise du Big Bang à aujourd'hui !" />
-  <meta name="theme-color" content="#0a0a0f" />
+  <meta name="description" content="HistoFrise � Place les �v�nements historiques sur la frise du temps !" />
+  <meta name="theme-color" content="#2a1a08" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-  <title>HistoFrise 🌍</title>
-
-  <!-- PWA -->
+  <title>HistoFrise ??</title>
   <link rel="manifest" href="manifest.json" />
-  <link rel="apple-touch-icon" href="public/icon-192.png" />
-
-  <!-- Styles -->
   <link rel="stylesheet" href="src/styles/main.css" />
 
-  <!-- Google AdSense — remplacer ca-pub-XXXXXXXXXX par ton ID -->
+  <!-- Google AdSense � remplacer ca-pub-XXXXXXXXXX par ton ID -->
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXX" crossorigin="anonymous"></script>
 
-  <!-- Firebase SDK -->
+  <!-- Firebase SDK via ESM -->
   <script type="importmap">
   {
     "imports": {
@@ -32,555 +27,669 @@
 </head>
 <body>
 
-<!-- ════════════════════════════════════════════════════════
-     APP
-════════════════════════════════════════════════════════ -->
-<div id="app">
+<div class="parchment-app">
+  <div class="scroll-container">
 
-  <!-- ── Header ──────────────────────────────────────────── -->
-  <header id="header">
-    <a class="logo" href="#" id="logo-link">Histo<span>Frise</span></a>
+    <div class="scroll-top"></div>
 
-    <div class="header-right">
-      <button class="btn btn-ghost" id="btn-leaderboard-header">🏆 Classement</button>
-      <button class="btn btn-multi btn-ghost" id="btn-multi-header" style="padding:8px 14px;font-size:0.82rem">👥 Multi</button>
-      <div id="user-area">
-        <button class="btn btn-google" id="btn-login" style="font-size:0.85rem;padding:8px 14px;">
-          <svg width="18" height="18" viewBox="0 0 18 18"><path fill="#4285F4" d="M17.64 9.2a10.34 10.34 0 0 0-.16-1.84H9v3.48h4.84a4.14 4.14 0 0 1-1.8 2.72v2.26h2.92a8.78 8.78 0 0 0 2.68-6.62z"/><path fill="#34A853" d="M9 18a8.6 8.6 0 0 0 5.96-2.18l-2.92-2.26a5.4 5.4 0 0 1-8.05-2.84H.96v2.34A9 9 0 0 0 9 18z"/><path fill="#FBBC05" d="M3.99 10.72A5.41 5.41 0 0 1 3.71 9c0-.59.1-1.17.28-1.72V4.94H.96A9 9 0 0 0 0 9c0 1.45.35 2.82.96 4.06l3.03-2.34z"/><path fill="#EA4335" d="M9 3.58a4.86 4.86 0 0 1 3.44 1.35l2.58-2.58A8.64 8.64 0 0 0 9 0 9 9 0 0 0 .96 4.94L3.99 7.28A5.36 5.36 0 0 1 9 3.58z"/></svg>
-          Connexion
-        </button>
-        <div id="user-card" class="user-card hidden">
-          <div id="user-avatar" class="user-avatar">?</div>
-          <span id="user-name">Joueur</span>
-          <button id="btn-logout" class="btn-ghost" style="border:none;padding:2px 6px;font-size:0.75rem;">✕</button>
+    <div class="parchment-body">
+
+      <!-- HEADER -->
+      <div class="game-header">
+        <div class="game-title">Histo<span>Frise</span></div>
+        <div class="ornament">? ? ?</div>
+      </div>
+
+      <!-- USER BAR -->
+      <div class="user-bar">
+        <div id="btn-login-area">
+          <button class="btn-ink" id="btn-login">? Connexion Google</button>
+        </div>
+        <div id="user-info-area" class="user-info hidden">
+          <div class="user-avatar" id="user-avatar-el">?</div>
+          <span id="user-name-el">Joueur</span>
+          <button class="btn-ink danger" id="btn-logout" style="padding:3px 10px;font-size:0.75rem">?</button>
+        </div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap">
+          <button class="btn-ink" id="btn-header-lb">?? Classement</button>
+          <button class="btn-ink multi" id="btn-header-multi">?? Multi</button>
         </div>
       </div>
-    </div>
-  </header>
 
-  <!-- ── Bannière pub ─────────────────────────────────────── -->
-  <div id="ad-banner">
-    <ins class="adsbygoogle"
-         style="display:block;width:100%;height:60px"
-         data-ad-client="ca-pub-XXXXXXXXXX"
-         data-ad-slot="XXXXXXXXXX"
-         data-ad-format="horizontal"></ins>
-    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
-  </div>
+      <hr class="ink-divider">
 
-  <!-- ════════════════════════════════════════════════════
-       ÉCRAN 1 — ACCUEIL
-  ════════════════════════════════════════════════════ -->
-  <section id="screen-home" class="screen active">
-    <h1 class="hero-title">Du Big Bang<br>à aujourd'hui</h1>
-    <p class="hero-sub">
-      Place des événements historiques sur la frise du temps en 30 secondes.
-      Plus tu es précis, plus tu scores !
-    </p>
-
-    <div class="hero-stats">
-      <div class="hero-stat">
-        <div class="hero-stat-value">30s</div>
-        <div class="hero-stat-label">par question</div>
+      <!-- PUB -->
+      <div class="ad-strip">
+        <ins class="adsbygoogle"
+             style="display:block;width:100%;height:50px"
+             data-ad-client="ca-pub-XXXXXXXXXX"
+             data-ad-slot="XXXXXXXXXX"
+             data-ad-format="horizontal"></ins>
+        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
       </div>
-      <div class="hero-stat">
-        <div class="hero-stat-value">8</div>
-        <div class="hero-stat-label">questions</div>
-      </div>
-      <div class="hero-stat">
-        <div class="hero-stat-value">13,8 Ga</div>
-        <div class="hero-stat-label">de frise</div>
-      </div>
-    </div>
 
-    <div class="hero-actions">
-      <button class="btn btn-primary" id="btn-play" style="font-size:1.1rem;padding:16px;">
-        🎮 Jouer
-      </button>
-      <button class="btn btn-multi" id="btn-multiplayer">
-        👥 Multijoueur
-      </button>
-      <button class="btn btn-secondary" id="btn-leaderboard-home">
-        🏆 Classement
-      </button>
-    </div>
+      <!-- ???????????????? ACCUEIL ???????????????? -->
+      <section id="screen-home" class="screen active">
+        <div class="home-center">
+          <div class="home-seal">??</div>
+          <p class="home-tagline">
+            De la d�couverte de la roue aux jours d'aujourd'hui �<br>
+            Place les �v�nements sur la frise du temps en 30 secondes !
+          </p>
+          <div class="home-actions">
+            <button class="btn-ink primary" id="btn-play" style="font-size:1rem;padding:12px 36px">? Jouer</button>
+            <button class="btn-ink multi" id="btn-play-multi" style="padding:8px 24px">?? Multijoueur</button>
+            <button class="btn-ink" id="btn-play-lb" style="padding:8px 24px">?? Classement</button>
+          </div>
+          <div class="home-stats">
+            <div class="stat-box"><div class="stat-val">30s</div><div class="stat-lbl">par question</div></div>
+            <div class="stat-box"><div class="stat-val">8</div><div class="stat-lbl">questions</div></div>
+            <div class="stat-box"><div class="stat-val">-3500 av</div><div class="stat-lbl">la roue ? 2024</div></div>
+          </div>
+        </div>
+      </section>
 
-    <div style="margin-top:8px;font-size:0.78rem;color:var(--text-muted)">
-      🔒 Connexion Google nécessaire pour sauvegarder ton score
-    </div>
-  </section>
+      <!-- ???????????????? JEU ???????????????? -->
+      <section id="screen-game" class="screen">
 
-  <!-- ════════════════════════════════════════════════════
-       ÉCRAN 2 — JEU
-  ════════════════════════════════════════════════════ -->
-  <section id="screen-game" class="screen">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+          <span class="score-badge" id="score-display">0 pts</span>
+          <div class="timer-row" style="flex:1;margin:0">
+            <div class="timer-num" id="timer-display">30</div>
+            <div class="timer-track"><div class="timer-bar" id="timer-bar"></div></div>
+            <span class="q-num" id="q-num">1/8</span>
+          </div>
+        </div>
 
-    <!-- En-tête jeu -->
-    <div class="game-header">
-      <div class="game-meta">
-        <span id="difficulty-badge" class="badge badge-easy">Facile</span>
-        <span id="category-badge" class="badge" style="background:var(--bg-surface);border:1px solid var(--border);color:var(--text-dim)">histoire</span>
-      </div>
-      <div class="game-score-area">
-        <span class="score-label">Score</span>
-        <span class="score-value" id="score-display">0</span>
-      </div>
-      <button class="btn btn-ghost" id="btn-quit" style="font-size:0.8rem;padding:6px 12px">✕ Quitter</button>
-    </div>
+        <div class="question-card">
+          <div class="q-badges">
+            <span class="q-badge" id="q-diff">Facile</span>
+            <span class="q-badge cat" id="q-cat">histoire</span>
+          </div>
+          <div class="q-text" id="q-text">Chargement�</div>
+          <div class="q-hint" id="q-hint"></div>
+        </div>
 
-    <!-- Timer -->
-    <div class="timer-area">
-      <div class="timer-num" id="timer-display">30</div>
-      <div class="timer-track">
-        <div class="timer-bar" id="timer-bar"></div>
-      </div>
-      <span class="question-num" id="question-number">1 / 8</span>
-    </div>
+        <div class="frise-wrap" id="frise-wrap">
+          <canvas id="frise-canvas"></canvas>
+        </div>
+        <p class="frise-tip">?? Clic = placer ta r�ponse � Scroll/Pincer = zoom � Glisser = naviguer</p>
 
-    <!-- Question -->
-    <div class="question-card">
-      <div class="question-text" id="question-text">Chargement…</div>
-      <div class="question-hint" id="question-hint"></div>
-    </div>
+        <div class="answer-display" id="answer-display">
+          Cliquez sur la frise pour indiquer votre r�ponse�
+        </div>
 
-    <!-- Frise -->
-    <div class="timeline-wrap" id="timeline-wrap">
-      <canvas id="timeline-canvas"></canvas>
-    </div>
-    <p class="timeline-instructions">
-      🖱️ Clic pour placer · Scroll/Pincer pour zoomer · Glisser pour naviguer
-    </p>
+        <div class="game-actions">
+          <button class="btn-ink primary" id="btn-confirm" disabled>? Confirmer</button>
+          <button class="btn-ink danger" id="btn-quit" style="font-size:0.8rem;padding:6px 14px">? Quitter</button>
+        </div>
 
-    <!-- Réponse sélectionnée -->
-    <div class="selected-year-display" id="selected-year-display">
-      Cliquez sur la frise pour placer votre réponse
-    </div>
+        <div id="feedback-panel" class="feedback-panel hidden">
+          <div class="fb-title" id="fb-title"></div>
+          <div class="fb-pts" id="fb-pts"></div>
+          <div class="fb-details">
+            <div><strong id="fb-correct"></strong></div>
+            <div id="fb-guess"></div>
+            <div id="fb-diff"></div>
+          </div>
+          <button class="btn-ink primary" id="btn-next">? Question suivante</button>
+        </div>
 
-    <!-- Actions -->
-    <div class="game-actions">
-      <button class="btn btn-primary" id="btn-confirm" disabled>
-        ✅ Confirmer ma réponse
-      </button>
-    </div>
+      </section>
 
-    <!-- Feedback (caché jusqu'à la réponse) -->
-    <div id="feedback-panel" class="feedback-panel hidden">
-      <div class="feedback-title" id="feedback-title">Excellent !</div>
-      <div class="feedback-points" id="feedback-points">+850 pts</div>
-      <div class="feedback-details">
-        <div><strong id="feedback-correct"></strong></div>
-        <div id="feedback-guess"></div>
-        <div id="feedback-diff"></div>
-      </div>
-      <div style="display:flex;justify-content:center">
-        <button class="btn btn-primary" id="btn-next">Question suivante →</button>
-      </div>
-    </div>
+      <!-- ???????????????? FIN ???????????????? -->
+      <section id="screen-end" class="screen">
+        <div class="end-center">
+          <div class="end-title" id="end-title">Partie termin�e !</div>
+          <div class="end-score" id="end-score">0</div>
+          <div class="save-note" id="end-save-note"></div>
+          <div class="end-hist" id="end-hist"></div>
+          <div class="end-actions">
+            <button class="btn-ink primary" id="btn-replay">? Rejouer</button>
+            <button class="btn-ink" id="btn-end-lb">?? Classement</button>
+            <button class="btn-ink" id="btn-end-home">? Accueil</button>
+          </div>
+        </div>
+      </section>
 
-  </section>
+      <!-- ???????????????? CLASSEMENT ???????????????? -->
+      <section id="screen-leaderboard" class="screen">
+        <div class="section-title">?? Classement mondial</div>
+        <div id="lb-content">
+          <div style="text-align:center;padding:30px;color:#7a5030;font-style:italic">Chargement�</div>
+        </div>
+        <div style="display:flex;gap:8px;justify-content:center;margin-top:12px;flex-wrap:wrap">
+          <button class="btn-ink primary" id="btn-lb-play">? Jouer</button>
+          <button class="btn-ink" id="btn-lb-refresh">? Actualiser</button>
+          <button class="btn-ink" id="btn-lb-home">? Accueil</button>
+        </div>
+      </section>
 
-  <!-- ════════════════════════════════════════════════════
-       ÉCRAN 3 — FIN DE PARTIE
-  ════════════════════════════════════════════════════ -->
-  <section id="screen-end" class="screen">
-    <div class="end-title" id="end-title">Partie terminée !</div>
-    <div style="color:var(--text-dim);font-size:0.9rem">Ton score</div>
-    <div class="end-score" id="end-score">0</div>
-    <div id="end-save-msg" style="color:var(--text-dim);font-size:0.85rem"></div>
+      <!-- ???????????????? MULTIJOUEUR ???????????????? -->
+      <section id="screen-multi" class="screen">
+        <div class="section-title">?? Multijoueur</div>
+        <div class="multi-tabs">
+          <button class="m-tab active" id="tab-create">Cr�er une room</button>
+          <button class="m-tab" id="tab-join">Rejoindre</button>
+        </div>
 
-    <div class="end-history" id="end-history"></div>
+        <div id="multi-create-panel">
+          <p style="color:#5a3010;font-style:italic;font-size:0.88rem;margin-bottom:14px">
+            Cr�e une salle et partage le code. Jusqu'� 4 joueurs !
+          </p>
+          <button class="btn-ink primary" id="btn-create-room">? Cr�er la room</button>
+        </div>
 
-    <div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:8px">
-      <button class="btn btn-primary" id="btn-replay">🔄 Rejouer</button>
-      <button class="btn btn-secondary" id="btn-end-leaderboard">🏆 Classement</button>
-      <button class="btn btn-secondary" id="btn-end-home">🏠 Accueil</button>
-    </div>
-  </section>
+        <div id="multi-join-panel" class="hidden">
+          <p style="color:#5a3010;font-style:italic;font-size:0.88rem;margin-bottom:10px">Entre le code � 6 caract�res :</p>
+          <input type="text" class="input-ink" id="room-input" placeholder="ABCD12" maxlength="6" autocomplete="off">
+          <div style="margin-top:10px">
+            <button class="btn-ink primary" id="btn-join-room">? Rejoindre</button>
+          </div>
+        </div>
 
-  <!-- ════════════════════════════════════════════════════
-       ÉCRAN 4 — CLASSEMENT
-  ════════════════════════════════════════════════════ -->
-  <section id="screen-leaderboard" class="screen">
-    <div style="display:flex;align-items:center;gap:12px;margin-bottom:4px">
-      <h2 style="font-family:var(--font-title);color:var(--gold);font-size:1.4rem">🏆 Classement mondial</h2>
-      <button class="btn btn-ghost" id="btn-lb-refresh" style="margin-left:auto;font-size:0.8rem">↻ Actualiser</button>
-    </div>
-    <div id="leaderboard-container">
-      <div class="lb-loading"><div class="spinner"></div><p>Chargement…</p></div>
-    </div>
-    <div style="display:flex;gap:10px;justify-content:center;margin-top:12px">
-      <button class="btn btn-primary" id="btn-lb-play">🎮 Jouer</button>
-      <button class="btn btn-secondary" id="btn-lb-home">🏠 Accueil</button>
-    </div>
-  </section>
+        <div id="multi-lobby" class="hidden" style="margin-top:14px">
+          <div style="text-align:center;margin-bottom:10px">
+            <div style="font-size:0.82rem;color:#5a3010;font-style:italic;margin-bottom:4px">Code de la room :</div>
+            <div class="room-code-box" id="room-code-display">------</div>
+            <button class="btn-ink" onclick="navigator.clipboard.writeText(document.getElementById('room-code-display').textContent)" style="font-size:0.75rem;padding:3px 10px;margin-top:4px">?? Copier</button>
+          </div>
+          <div class="lobby-players" id="lobby-players"></div>
+          <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap">
+            <button class="btn-ink primary" id="btn-ready">? Je suis pr�t !</button>
+            <button class="btn-ink primary" id="btn-start-multi" style="display:none">?? Lancer !</button>
+          </div>
+        </div>
 
-  <!-- ════════════════════════════════════════════════════
-       ÉCRAN 5 — MULTIJOUEUR
-  ════════════════════════════════════════════════════ -->
-  <section id="screen-multi" class="screen">
-    <h2 style="font-family:var(--font-title);color:var(--gold);font-size:1.4rem">👥 Multijoueur</h2>
+        <div style="margin-top:12px">
+          <button class="btn-ink" id="btn-multi-home">? Retour</button>
+        </div>
+      </section>
 
-    <div class="tabs" id="multi-tabs">
-      <button class="tab active" data-tab="create">Créer une room</button>
-      <button class="tab" data-tab="join">Rejoindre</button>
-    </div>
-
-    <!-- Créer -->
-    <div id="multi-create" class="multi-panel">
-      <p style="color:var(--text-dim);font-size:0.9rem;margin-bottom:16px">
-        Crée une salle et partage le code à tes amis. La partie commence quand tout le monde est prêt.
-      </p>
-      <button class="btn btn-primary" id="btn-create-room">🚀 Créer une room</button>
-    </div>
-
-    <!-- Rejoindre -->
-    <div id="multi-join" class="multi-panel hidden">
-      <p style="color:var(--text-dim);font-size:0.9rem;margin-bottom:12px">Entre le code de la room :</p>
-      <input type="text" id="room-code-input" class="input-field" placeholder="ABCD12" maxlength="6" autocomplete="off" />
-      <div style="margin-top:12px">
-        <button class="btn btn-primary" id="btn-join-room">Rejoindre →</button>
-      </div>
-    </div>
-
-    <!-- Lobby (affiché quand dans une room) -->
-    <div id="multi-lobby" class="hidden"></div>
-
-    <div style="margin-top:12px">
-      <button class="btn btn-secondary" id="btn-multi-home">🏠 Retour</button>
-    </div>
-  </section>
-
-</div><!-- /#app -->
-
-<!-- ── Navigation mobile ─────────────────────────────────── -->
-<nav class="nav-bottom">
-  <button class="nav-item active" id="nav-home">
-    <span class="nav-item-icon">🏠</span>
-    <span>Accueil</span>
-  </button>
-  <button class="nav-item" id="nav-play">
-    <span class="nav-item-icon">🎮</span>
-    <span>Jouer</span>
-  </button>
-  <button class="nav-item" id="nav-multi">
-    <span class="nav-item-icon">👥</span>
-    <span>Multi</span>
-  </button>
-  <button class="nav-item" id="nav-lb">
-    <span class="nav-item-icon">🏆</span>
-    <span>Scores</span>
-  </button>
-</nav>
-
-<!-- ── Modale connexion requise ──────────────────────────── -->
-<div class="modal-overlay" id="modal-login">
-  <div class="modal">
-    <h2>🔐 Connexion requise</h2>
-    <p>Pour sauvegarder ton score et apparaître au classement, connecte-toi avec Google. C'est gratuit et rapide !</p>
-    <div class="modal-actions">
-      <button class="btn btn-google" id="modal-btn-login">
-        <svg width="18" height="18" viewBox="0 0 18 18"><path fill="#4285F4" d="M17.64 9.2a10.34 10.34 0 0 0-.16-1.84H9v3.48h4.84a4.14 4.14 0 0 1-1.8 2.72v2.26h2.92a8.78 8.78 0 0 0 2.68-6.62z"/><path fill="#34A853" d="M9 18a8.6 8.6 0 0 0 5.96-2.18l-2.92-2.26a5.4 5.4 0 0 1-8.05-2.84H.96v2.34A9 9 0 0 0 9 18z"/><path fill="#FBBC05" d="M3.99 10.72A5.41 5.41 0 0 1 3.71 9c0-.59.1-1.17.28-1.72V4.94H.96A9 9 0 0 0 0 9c0 1.45.35 2.82.96 4.06l3.03-2.34z"/><path fill="#EA4335" d="M9 3.58a4.86 4.86 0 0 1 3.44 1.35l2.58-2.58A8.64 8.64 0 0 0 9 0 9 9 0 0 0 .96 4.94L3.99 7.28A5.36 5.36 0 0 1 9 3.58z"/></svg>
-        Se connecter avec Google
-      </button>
-      <button class="btn btn-ghost" id="modal-btn-skip">Jouer sans compte (score non sauvegardé)</button>
-    </div>
+    </div><!-- /parchment-body -->
+    <div class="scroll-bottom"></div>
   </div>
 </div>
 
-<!-- ════════════════════════════════════════════════════════
-     SCRIPT PRINCIPAL
-════════════════════════════════════════════════════════ -->
+<!-- NAV MOBILE -->
+<nav class="mobile-nav">
+  <button class="m-nav-btn active" id="nav-home"><span class="icon">?</span><span>Accueil</span></button>
+  <button class="m-nav-btn" id="nav-play"><span class="icon">?</span><span>Jouer</span></button>
+  <button class="m-nav-btn" id="nav-multi"><span class="icon">??</span><span>Multi</span></button>
+  <button class="m-nav-btn" id="nav-lb"><span class="icon">??</span><span>Scores</span></button>
+</nav>
+
+<!-- ????????????????????????????????????????????????????????
+     SCRIPTS
+???????????????????????????????????????????????????????? -->
 <script type="module">
-// ──────────────────────────────────────────────────────────
-//  IMPORTS
-// ──────────────────────────────────────────────────────────
-import { signInWithGoogle, signOutUser, onAuthChange } from "./src/auth/auth.js";
-import { Game } from "./src/game/game.js";
-import { renderLeaderboard } from "./src/components/leaderboard.js";
-import {
-  createRoom, joinRoom, listenRoom,
-  setReady, startMultiplayerGame, renderLobby
-} from "./src/components/multiplayer.js";
-import { formatYear } from "./src/game/scoring.js";
+import { signInWithGoogle, signOutUser, onAuthChange, saveScore, getLeaderboard, getUserScore } from "./src/auth/auth.js";
+import { createRoom, joinRoom, listenRoom, setReady, startMultiplayerGame, renderLobby } from "./src/components/multiplayer.js";
 
-// ──────────────────────────────────────────────────────────
-//  ÉTAT GLOBAL
-// ──────────────────────────────────────────────────────────
-let currentUser = null;
-let roomUnsubscribe = null;
-let currentRoomId = null;
-let game = null;
+// ?? Donn�es ??????????????????????????????????????????????
+const MIN_YEAR = -3500, MAX_YEAR = 2024, SPAN = MAX_YEAR - MIN_YEAR;
 
-// ──────────────────────────────────────────────────────────
-//  DOM REFS
-// ──────────────────────────────────────────────────────────
-const $ = id => document.getElementById(id);
-const screens = {
-  home:        $("screen-home"),
-  game:        $("screen-game"),
-  end:         $("screen-end"),
-  leaderboard: $("screen-leaderboard"),
-  multi:       $("screen-multi")
-};
+const MARKERS = [
+  { y:-3500, label:"Roue",          icon:"?",  c:"#e8b870" },
+  { y:-3100, label:"�criture",      icon:"?",  c:"#d4a060" },
+  { y:-2560, label:"Pyramides",     icon:"??", c:"#f0c870" },
+  { y:-1754, label:"Hammurabi",     icon:"?",  c:"#e0b060" },
+  { y:-800,  label:"Gr�ce",         icon:"??", c:"#c8d890" },
+  { y:-776,  label:"JO antiques",   icon:"??", c:"#a0c0d0" },
+  { y:-509,  label:"R�p. Romaine",  icon:"??", c:"#e8a070" },
+  { y:-334,  label:"Alexandre",     icon:"?",  c:"#d0a060" },
+  { y:-27,   label:"Empire Rome",   icon:"??", c:"#e8a070" },
+  { y:-4,    label:"J�sus",         icon:"?",  c:"#f8f0d0" },
+  { y:476,   label:"Chute Rome",    icon:"??", c:"#b0a8c0" },
+  { y:570,   label:"Islam",         icon:"?",  c:"#90c8e8" },
+  { y:800,   label:"Charlemagne",   icon:"??", c:"#f8e090" },
+  { y:1066,  label:"Hastings",      icon:"?",  c:"#c0b8d0" },
+  { y:1215,  label:"Magna Carta",   icon:"??", c:"#d0e8c0" },
+  { y:1347,  label:"Peste Noire",   icon:"??", c:"#909090" },
+  { y:1431,  label:"Jeanne d'Arc",  icon:"?",  c:"#e0c060" },
+  { y:1450,  label:"Gutenberg",     icon:"??", c:"#90d0a0" },
+  { y:1492,  label:"Am�rique",      icon:"?", c:"#60a0d0" },
+  { y:1543,  label:"Copernic",      icon:"??", c:"#80c0e0" },
+  { y:1687,  label:"Newton",        icon:"??", c:"#90d8a0" },
+  { y:1789,  label:"R�volution",    icon:"??", c:"#4080b0" },
+  { y:1815,  label:"Waterloo",      icon:"?",  c:"#b03030" },
+  { y:1859,  label:"Darwin",        icon:"??", c:"#90b060" },
+  { y:1865,  label:"Esclavage",     icon:"?", c:"#8060a0" },
+  { y:1903,  label:"Aviation",      icon:"?",  c:"#60a8d0" },
+  { y:1914,  label:"WW1",           icon:"??", c:"#b03030" },
+  { y:1917,  label:"R�vol. russe",  icon:"?",  c:"#c03030" },
+  { y:1939,  label:"WW2",           icon:"??", c:"#902020" },
+  { y:1969,  label:"Lune",          icon:"??", c:"#b0b8c8" },
+  { y:1989,  label:"Mur Berlin",    icon:"??", c:"#e0a860" },
+  { y:2024,  label:"Aujourd'hui",   icon:"??", c:"#60b870" },
+];
 
-const ui = {
-  canvas:              $("timeline-canvas"),
-  questionText:        $("question-text"),
-  questionHint:        $("question-hint"),
-  difficultyBadge:     $("difficulty-badge"),
-  categoryBadge:       $("category-badge"),
-  timerDisplay:        $("timer-display"),
-  timerBar:            $("timer-bar"),
-  questionNumber:      $("question-number"),
-  scoreDisplay:        $("score-display"),
-  confirmBtn:          $("btn-confirm"),
-  feedbackPanel:       $("feedback-panel"),
-  feedbackTitle:       $("feedback-title"),
-  feedbackPoints:      $("feedback-points"),
-  feedbackCorrect:     $("feedback-correct"),
-  feedbackGuess:       $("feedback-guess"),
-  feedbackDiff:        $("feedback-diff"),
-  nextBtn:             $("btn-next"),
-  selectedYearDisplay: $("selected-year-display"),
-  showScreen: (name) => {
-    Object.values(screens).forEach(s => s.classList.remove("active"));
-    screens[name]?.classList.add("active");
-    // Sync nav
-    document.querySelectorAll(".nav-item").forEach(n => n.classList.remove("active"));
-    const map = { home:"nav-home", game:"nav-play", leaderboard:"nav-lb", multi:"nav-multi" };
-    if (map[name]) $(map[name])?.classList.add("active");
-  },
-  showEndScreen: (totalScore, history) => {
-    $("end-score").textContent = totalScore.toLocaleString("fr-FR");
-    $("end-title").textContent = titleForScore(totalScore);
-    $("end-save-msg").textContent = currentUser
-      ? "✅ Score sauvegardé dans le classement !"
-      : "⚠️ Connecte-toi pour sauvegarder ton score.";
+const QUESTIONS = [
+  { id:"roue",      diff:"easy",   q:"D�couverte de la roue",                       hint:"M�sopotamie, poterie puis transport",              y:-3500, cat:"invention" },
+  { id:"ecriture",  diff:"easy",   q:"Invention de l'�criture cun�iforme",          hint:"Sum�riens, tablettes d'argile",                   y:-3400, cat:"civilisation" },
+  { id:"pyramides", diff:"easy",   q:"Construction de la Grande Pyramide de Gizeh", hint:"Pharaon Kh�ops",                                  y:-2560, cat:"civilisation" },
+  { id:"jesus",     diff:"easy",   q:"Naissance de J�sus-Christ",                   hint:"Point de d�part de notre calendrier",             y:-4,    cat:"religion" },
+  { id:"mahomet",   diff:"easy",   q:"Naissance de Mahomet",                        hint:"Fondateur de l'Islam, n� � La Mecque",            y:570,   cat:"religion" },
+  { id:"charlemagne",diff:"easy",  q:"Couronnement de Charlemagne",                 hint:"Nuit de No�l, l'an 800",                          y:800,   cat:"politique" },
+  { id:"crusade1",  diff:"medium", q:"Premi�re Croisade",                           hint:"Appel du Pape Urbain II � Clermont",              y:1096,  cat:"guerre" },
+  { id:"magna",     diff:"medium", q:"Signature de la Magna Carta",                 hint:"Premier texte limitant le pouvoir royal anglais", y:1215,  cat:"politique" },
+  { id:"jeanne",    diff:"medium", q:"Mort de Jeanne d'Arc",                        hint:"Br�l�e � Rouen pendant la Guerre de Cent Ans",   y:1431,  cat:"guerre" },
+  { id:"pest",      diff:"medium", q:"Grande Peste Noire en Europe",                hint:"Un tiers de la population d�cim�e",               y:1347,  cat:"catastrophe" },
+  { id:"gutenberg", diff:"medium", q:"Invention de l'imprimerie par Gutenberg",     hint:"Bible � 42 lignes",                               y:1450,  cat:"invention" },
+  { id:"amerique",  diff:"medium", q:"Christophe Colomb d�couvre l'Am�rique",       hint:"Ni�a, Pinta, Santa Mar�a",                        y:1492,  cat:"exploration" },
+  { id:"rome_rep",  diff:"medium", q:"Fondation de la R�publique Romaine",          hint:"Chasse des rois �trusques",                       y:-509,  cat:"politique" },
+  { id:"olympics",  diff:"medium", q:"Premiers Jeux Olympiques antiques",           hint:"� Olympie, dans la Gr�ce antique",                y:-776,  cat:"culture" },
+  { id:"waterloo",  diff:"medium", q:"Bataille de Waterloo",                        hint:"D�faite finale de Napol�on Bonaparte",            y:1815,  cat:"guerre" },
+  { id:"frev",      diff:"medium", q:"R�volution Fran�aise � prise de la Bastille", hint:"14 juillet, symbole de la libert�",               y:1789,  cat:"politique" },
+  { id:"ww1",       diff:"hard",   q:"D�but de la Premi�re Guerre mondiale",        hint:"Assassinat de Fran�ois-Ferdinand � Sarajevo",     y:1914,  cat:"guerre" },
+  { id:"ww2",       diff:"hard",   q:"Fin de la Seconde Guerre mondiale",           hint:"Capitulation de l'Allemagne nazie en mai",        y:1945,  cat:"guerre" },
+  { id:"lune",      diff:"hard",   q:"Premier homme sur la Lune",                   hint:"Mission Apollo 11 � Neil Armstrong",              y:1969,  cat:"science" },
+  { id:"berlin",    diff:"hard",   q:"Chute du Mur de Berlin",                      hint:"9 novembre, r�unification allemande",             y:1989,  cat:"politique" },
+  { id:"copernicus",diff:"hard",   q:"Copernic publie son h�liocentrisme",          hint:"La Terre tourne autour du Soleil",                y:1543,  cat:"science" },
+  { id:"newton",    diff:"hard",   q:"Newton publie les Principia Mathematica",     hint:"Loi de la gravitation universelle",               y:1687,  cat:"science" },
+  { id:"rome_fall", diff:"hard",   q:"Chute de l'Empire Romain d'Occident",        hint:"Fin de l'Antiquit�, d�but du Moyen �ge",         y:476,   cat:"politique" },
+  { id:"darwin",    diff:"expert", q:"Darwin publie 'De l'origine des esp�ces'",   hint:"Th�orie de l'�volution par s�lection naturelle",  y:1859,  cat:"science" },
+  { id:"wright",    diff:"expert", q:"Premier vol des fr�res Wright",               hint:"Kitty Hawk, Caroline du Nord, 12 secondes",       y:1903,  cat:"invention" },
+  { id:"alexander", diff:"expert", q:"Alexandre le Grand commence ses conqu�tes",   hint:"Croise le Granique, invasion de l'Asie Mineure", y:-334,  cat:"guerre" },
+  { id:"platon",    diff:"expert", q:"Mort de Platon",                              hint:"Philosophe de l'Acad�mie, �l�ve de Socrate",      y:-348,  cat:"philosophie" },
+  { id:"hammurabi", diff:"expert", q:"Code de Hammurabi",                           hint:"Un des premiers codes de lois, Babylone",         y:-1754, cat:"civilisation" },
+  { id:"lincoln",   diff:"expert", q:"Abolition de l'esclavage aux �tats-Unis",    hint:"13e amendement sign� par Lincoln",                y:1865,  cat:"politique" },
+  { id:"russian_rev",diff:"expert",q:"R�volution d'Octobre en Russie",             hint:"Prise du palais d'Hiver par les Bolcheviks",      y:1917,  cat:"politique" },
+];
 
-    const hist = $("end-history");
-    hist.innerHTML = history.map(({ question: q, guessYear, result }) => `
-      <div class="end-history-row">
-        <div>
-          <div class="end-history-q">${q.question}</div>
-          <div class="end-history-detail">
-            Bonne réponse : ${formatYear(q.year)} · Ta réponse : ${formatYear(guessYear)}
-          </div>
-        </div>
-        <div class="end-history-pts" style="color:${result.color}">+${result.points}</div>
-      </div>
-    `).join("");
+// ?? Utilitaires ???????????????????????????????????????????
+function formatY(y) {
+  const a = Math.abs(y), s = y < 0 ? " av. J.-C." : (y > 0 ? " ap. J.-C." : "");
+  if (a >= 10000) return a.toLocaleString("fr-FR") + " ans av. J.-C.";
+  return a.toLocaleString("fr-FR") + s;
+}
+function formatDiff(d) {
+  const a = Math.abs(d);
+  if (a === 0)   return "Exactement !";
+  if (a >= 1000) return `� ${Math.round(a/100)*100} ans`;
+  if (a >= 100)  return `� ${Math.round(a/10)*10} ans`;
+  return `� ${a} an(s)`;
+}
+function calcScore(guess, correct, tLeft) {
+  const err = Math.abs(guess - correct), pct = err / SPAN * 100;
+  let base;
+  if (pct < 0.05)      base = 1000;
+  else if (pct < 0.2)  base = 850;
+  else if (pct < 0.5)  base = 700;
+  else if (pct < 1)    base = 550;
+  else if (pct < 3)    base = 380;
+  else if (pct < 10)   base = 200;
+  else if (pct < 30)   base = 80;
+  else                 base = 15;
+  const pts = base + Math.round(base * 0.3 * tLeft / 30);
+  const [label, color] =
+    base >= 1000 ? ["PARFAIT ! ??","#1a7a10"] :
+    base >= 850  ? ["Excellent ! ?","#1a7a10"] :
+    base >= 700  ? ["Tr�s bien ! ??","#4a8a20"] :
+    base >= 550  ? ["Bien ! ??","#7a6010"] :
+    base >= 380  ? ["Pas mal ??","#8a5020"] :
+    base >= 200  ? ["Approximatif ??","#8a3010"] :
+                   ["Loin... ??","#8a1010"];
+  return { pts, label, color, err };
+}
+function shuffle(a) { return [...a].sort(() => Math.random() - 0.5); }
 
-    ui.showScreen("end");
+// ?? Moteur de frise (Canvas) ??????????????????????????????
+class Frise {
+  constructor(canvas, onSelect) {
+    this.cv = canvas; this.ctx = canvas.getContext("2d"); this.onSelect = onSelect;
+    this.vS = MIN_YEAR; this.vE = MAX_YEAR;
+    this.guess = null; this.correct = null; this.locked = false;
+    this.isDrag = false; this.lastX = 0; this.pinchD = 0;
+    this.resize(); this.events(); this.draw();
   }
-};
-
-function titleForScore(score) {
-  if (score >= 7000) return "🌟 Historien de génie !";
-  if (score >= 5000) return "🎓 Excellent historien !";
-  if (score >= 3000) return "📚 Bon élève !";
-  if (score >= 1500) return "🙂 Pas mal du tout !";
-  return "📅 Continue d'apprendre !";
-}
-
-// ──────────────────────────────────────────────────────────
-//  INIT JEU
-// ──────────────────────────────────────────────────────────
-function initGame() {
-  game = new Game(ui);
-  game.setUser(currentUser);
-}
-
-// ──────────────────────────────────────────────────────────
-//  AUTH
-// ──────────────────────────────────────────────────────────
-onAuthChange(user => {
-  currentUser = user;
-  updateUserUI(user);
-  game?.setUser(user);
-});
-
-function updateUserUI(user) {
-  const card = $("user-card");
-  const loginBtn = $("btn-login");
-  if (user) {
-    card.classList.remove("hidden");
-    loginBtn.classList.add("hidden");
-    const av = $("user-avatar");
-    if (user.photoURL) {
-      av.innerHTML = `<img src="${user.photoURL}" style="width:28px;height:28px;border-radius:50%;object-fit:cover" alt="">`;
-    } else {
-      av.textContent = (user.displayName || "?")[0].toUpperCase();
-    }
-    $("user-name").textContent = user.displayName?.split(" ")[0] || "Joueur";
-  } else {
-    card.classList.add("hidden");
-    loginBtn.classList.remove("hidden");
+  resize() {
+    const dpr = devicePixelRatio || 1, pw = this.cv.parentElement.clientWidth;
+    const h = window.innerWidth < 580 ? 150 : 185;
+    this.cv.width = pw*dpr; this.cv.height = h*dpr;
+    this.cv.style.width = pw+"px"; this.cv.style.height = h+"px";
+    this.ctx.scale(dpr, dpr); this.W = pw; this.H = h; this.draw();
   }
-}
-
-// ──────────────────────────────────────────────────────────
-//  ÉVÉNEMENTS — Navigation
-// ──────────────────────────────────────────────────────────
-$("logo-link").addEventListener("click", e => { e.preventDefault(); ui.showScreen("home"); });
-$("btn-leaderboard-header").addEventListener("click", () => loadLeaderboard());
-$("btn-leaderboard-home").addEventListener("click", () => loadLeaderboard());
-$("btn-lb-home").addEventListener("click", () => ui.showScreen("home"));
-$("btn-lb-play").addEventListener("click", () => startGame());
-$("btn-multi-header").addEventListener("click", () => showMulti());
-$("btn-multiplayer").addEventListener("click", () => showMulti());
-$("btn-multi-home").addEventListener("click", () => ui.showScreen("home"));
-$("btn-lb-refresh").addEventListener("click", () => loadLeaderboard());
-$("btn-end-home").addEventListener("click", () => ui.showScreen("home"));
-$("btn-end-leaderboard").addEventListener("click", () => loadLeaderboard());
-
-// Nav mobile
-$("nav-home").addEventListener("click", () => ui.showScreen("home"));
-$("nav-play").addEventListener("click", () => startGame());
-$("nav-multi").addEventListener("click", () => showMulti());
-$("nav-lb").addEventListener("click", () => loadLeaderboard());
-
-// ──────────────────────────────────────────────────────────
-//  ÉVÉNEMENTS — Jeu
-// ──────────────────────────────────────────────────────────
-$("btn-play").addEventListener("click", () => startGame());
-
-$("btn-confirm").addEventListener("click", () => game?.confirm());
-$("btn-next").addEventListener("click", () => game?.next());
-$("btn-quit").addEventListener("click", () => {
-  game?.stop();
-  ui.showScreen("home");
-});
-$("btn-replay").addEventListener("click", () => startGame());
-
-function startGame() {
-  if (!game) initGame();
-  else game.setUser(currentUser);
-  ui.showScreen("game");
-  // Petit délai pour que le canvas soit visible
-  setTimeout(() => game.start(), 50);
-}
-
-// ──────────────────────────────────────────────────────────
-//  CONNEXION / DÉCONNEXION
-// ──────────────────────────────────────────────────────────
-$("btn-login").addEventListener("click", () => openLoginModal());
-$("btn-logout").addEventListener("click", async () => {
-  await signOutUser();
-});
-
-$("modal-btn-login").addEventListener("click", async () => {
-  closeLoginModal();
-  try {
-    await signInWithGoogle();
-  } catch (e) {
-    alert("Erreur de connexion. Vérifiez votre configuration Firebase.");
-  }
-});
-$("modal-btn-skip").addEventListener("click", () => {
-  closeLoginModal();
-  startGame();
-});
-
-function openLoginModal() {
-  $("modal-login").classList.add("open");
-}
-function closeLoginModal() {
-  $("modal-login").classList.remove("open");
-}
-$("modal-login").addEventListener("click", e => {
-  if (e.target === $("modal-login")) closeLoginModal();
-});
-
-// ──────────────────────────────────────────────────────────
-//  CLASSEMENT
-// ──────────────────────────────────────────────────────────
-async function loadLeaderboard() {
-  ui.showScreen("leaderboard");
-  await renderLeaderboard($("leaderboard-container"), currentUser);
-}
-
-// ──────────────────────────────────────────────────────────
-//  MULTIJOUEUR
-// ──────────────────────────────────────────────────────────
-function showMulti() {
-  if (!currentUser) {
-    openLoginModal();
-    return;
-  }
-  ui.showScreen("multi");
-}
-
-// Tabs
-document.querySelectorAll(".tab").forEach(tab => {
-  tab.addEventListener("click", () => {
-    document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
-    tab.classList.add("active");
-    document.querySelectorAll(".multi-panel").forEach(p => p.classList.add("hidden"));
-    $("multi-" + tab.dataset.tab).classList.remove("hidden");
-  });
-});
-
-// Créer room
-$("btn-create-room").addEventListener("click", async () => {
-  if (!currentUser) { openLoginModal(); return; }
-  try {
-    $("btn-create-room").disabled = true;
-    $("btn-create-room").textContent = "Création…";
-    const roomId = await createRoom(currentUser);
-    currentRoomId = roomId;
-    listenToRoom(roomId);
-  } catch (e) {
-    alert("Erreur : " + e.message);
-  } finally {
-    $("btn-create-room").disabled = false;
-    $("btn-create-room").textContent = "🚀 Créer une room";
-  }
-});
-
-// Rejoindre room
-$("btn-join-room").addEventListener("click", async () => {
-  const code = $("room-code-input").value.trim().toUpperCase();
-  if (code.length < 4) { alert("Code invalide"); return; }
-  if (!currentUser) { openLoginModal(); return; }
-  try {
-    $("btn-join-room").disabled = true;
-    await joinRoom(code, currentUser);
-    currentRoomId = code;
-    listenToRoom(code);
-  } catch (e) {
-    alert("Erreur : " + e.message);
-  } finally {
-    $("btn-join-room").disabled = false;
-  }
-});
-
-function listenToRoom(roomId) {
-  if (roomUnsubscribe) roomUnsubscribe();
-  roomUnsubscribe = listenRoom(roomId, (data) => {
-    const lobby = $("multi-lobby");
-    lobby.classList.remove("hidden");
-    $("multi-create").classList.add("hidden");
-    $("multi-join").classList.add("hidden");
-
-    if (data.status === "playing") {
-      if (roomUnsubscribe) { roomUnsubscribe(); roomUnsubscribe = null; }
-      startGame();
-      return;
-    }
-
-    renderLobby(lobby, data, currentUser.uid, {
-      onReady: (isReady) => setReady(roomId, currentUser.uid, isReady),
-      onStart: () => startMultiplayerGame(roomId)
+  y2x(y) { return ((y-this.vS)/(this.vE-this.vS))*this.W; }
+  x2y(x) { return this.vS + (x/this.W)*(this.vE-this.vS); }
+  draw() {
+    const ctx=this.ctx, W=this.W, H=this.H, axY=H*0.6;
+    ctx.clearRect(0,0,W,H);
+    // Fond
+    const bg=ctx.createLinearGradient(0,0,0,H);
+    bg.addColorStop(0,"#1a0d04"); bg.addColorStop(1,"#0d0600");
+    ctx.fillStyle=bg; ctx.fillRect(0,0,W,H);
+    // �res
+    [[-3500,-700,"rgba(180,120,40,0.18)","Antiquit� orientale"],
+     [-700,476,"rgba(150,100,30,0.14)","Gr�ce & Rome"],
+     [476,1492,"rgba(80,60,100,0.15)","Moyen �ge"],
+     [1492,1789,"rgba(40,80,120,0.13)","Renaissance"],
+     [1789,2024,"rgba(30,100,60,0.15)","�poque moderne"]
+    ].forEach(([s,e,c,l]) => {
+      const x1=this.y2x(Math.max(s,this.vS)), x2=this.y2x(Math.min(e,this.vE));
+      if(x2<0||x1>W) return;
+      ctx.fillStyle=c; ctx.fillRect(x1,0,x2-x1,H*0.55);
+      if(x2-x1>60){ctx.fillStyle="rgba(200,180,100,0.3)";ctx.font="9px 'Cinzel',serif";ctx.textAlign="center";ctx.fillText(l,(x1+x2)/2,12);}
     });
+    // Axe
+    ctx.strokeStyle="#c8843a"; ctx.lineWidth=2;
+    ctx.beginPath(); ctx.moveTo(0,axY); ctx.lineTo(W,axY); ctx.stroke();
+    // Ticks
+    const sp=this.vE-this.vS;
+    const [maj,min_]=sp>5000?[1000,200]:sp>2000?[500,100]:sp>800?[200,50]:sp>300?[100,25]:sp>80?[50,10]:sp>30?[20,5]:[10,2];
+    ctx.font="9px 'Source Code Pro',monospace"; ctx.textAlign="center";
+    let t=Math.ceil(this.vS/maj)*maj;
+    while(t<=this.vE){
+      const x=this.y2x(t);
+      ctx.strokeStyle="#c8843a"; ctx.lineWidth=1.5;
+      ctx.beginPath(); ctx.moveTo(x,axY-10); ctx.lineTo(x,axY+10); ctx.stroke();
+      ctx.fillStyle="#e8c880";
+      ctx.fillText(t<0?Math.abs(t)+" av.":(t===0?"0":t+""), x, axY+22);
+      t+=maj;
+    }
+    t=Math.ceil(this.vS/min_)*min_;
+    while(t<=this.vE){
+      const x=this.y2x(t);
+      ctx.strokeStyle="#7a5020"; ctx.lineWidth=0.5;
+      ctx.beginPath(); ctx.moveTo(x,axY-5); ctx.lineTo(x,axY+5); ctx.stroke();
+      t+=min_;
+    }
+    // Marqueurs
+    MARKERS.forEach(m => {
+      if(m.y<this.vS||m.y>this.vE) return;
+      const x=this.y2x(m.y);
+      ctx.strokeStyle=m.c+"99"; ctx.lineWidth=1; ctx.setLineDash([3,3]);
+      ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,axY-12); ctx.stroke();
+      ctx.setLineDash([]);
+      ctx.font="12px serif"; ctx.textAlign="center";
+      ctx.fillText(m.icon, x, axY-16);
+    });
+    // Pins
+    if(this.guess!==null) this.pin(ctx,"#3a7ac8","TA DATE",this.guess,axY);
+    if(this.correct!==null) this.pin(ctx,"#2a9a30","BONNE DATE",this.correct,axY);
+    // Zoom
+    ctx.fillStyle="rgba(200,180,100,0.5)"; ctx.font="10px 'Source Code Pro',monospace"; ctx.textAlign="right";
+    ctx.fillText("?? �"+Math.round(SPAN/(this.vE-this.vS)), W-6, 14);
+  }
+  pin(ctx,color,label,year,axY) {
+    if(year<this.vS||year>this.vE) return;
+    const x=this.y2x(year);
+    ctx.strokeStyle=color; ctx.lineWidth=2;
+    ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,this.H); ctx.stroke();
+    ctx.fillStyle=color;
+    ctx.beginPath(); ctx.moveTo(x-7,axY-24); ctx.lineTo(x+7,axY-24); ctx.lineTo(x,axY-12); ctx.closePath(); ctx.fill();
+    ctx.fillStyle="#fff"; ctx.font="bold 8px 'Source Code Pro',monospace"; ctx.textAlign="center";
+    ctx.fillText(label, x, axY-30);
+  }
+  zoom(factor,cx) {
+    const cy=this.x2y(cx), sp=this.vE-this.vS, ns=Math.max(2,Math.min(SPAN,sp*factor));
+    const ratio=(cy-this.vS)/sp;
+    this.vS=cy-ratio*ns; this.vE=this.vS+ns;
+    if(this.vS<MIN_YEAR){this.vS=MIN_YEAR; this.vE=this.vS+ns;}
+    if(this.vE>MAX_YEAR){this.vE=MAX_YEAR; this.vS=this.vE-ns;}
+    this.draw();
+  }
+  pan(dx) {
+    const sp=this.vE-this.vS, d=-(dx/this.W)*sp;
+    this.vS=Math.max(MIN_YEAR,Math.min(MAX_YEAR-sp,this.vS+d));
+    this.vE=this.vS+sp; this.draw();
+  }
+  events() {
+    const c=this.cv;
+    c.addEventListener("mousedown",e=>{
+      if(this.locked) return;
+      this.isDrag=false; this.lastX=e.offsetX; this._sx=e.offsetX;
+      const mm=e2=>{ if(Math.abs(e2.offsetX-this._sx)>5) this.isDrag=true; if(this.isDrag) this.pan(e2.offsetX-this.lastX); this.lastX=e2.offsetX; };
+      const mu=e2=>{ window.removeEventListener("mousemove",mm); window.removeEventListener("mouseup",mu); if(!this.isDrag) this.click(e2.offsetX); };
+      window.addEventListener("mousemove",mm); window.addEventListener("mouseup",mu);
+    });
+    c.addEventListener("wheel",e=>{ e.preventDefault(); this.zoom(e.deltaY>0?1.25:0.8,e.offsetX); },{passive:false});
+    c.addEventListener("touchstart",e=>{
+      if(this.locked) return; e.preventDefault();
+      if(e.touches.length===1){this.lastX=e.touches[0].clientX-c.getBoundingClientRect().left;this._sx=this.lastX;this.isDrag=false;}
+      else this.pinchD=pd(e);
+    },{passive:false});
+    c.addEventListener("touchmove",e=>{
+      if(this.locked) return; e.preventDefault();
+      if(e.touches.length===1){const x=e.touches[0].clientX-c.getBoundingClientRect().left;if(Math.abs(x-this._sx)>8)this.isDrag=true;if(this.isDrag)this.pan(x-this.lastX);this.lastX=x;}
+      else{const nd=pd(e),mx=(e.touches[0].clientX+e.touches[1].clientX)/2-c.getBoundingClientRect().left;this.zoom(this.pinchD/nd,mx);this.pinchD=nd;}
+    },{passive:false});
+    c.addEventListener("touchend",e=>{ if(!this.isDrag&&e.changedTouches.length===1&&!this.locked) this.click(e.changedTouches[0].clientX-c.getBoundingClientRect().left); });
+    window.addEventListener("resize",()=>this.resize());
+  }
+  click(x){ const y=Math.round(this.x2y(x)); this.guess=y; this.draw(); if(this.onSelect) this.onSelect(y); }
+  showResult(g,c2){ this.guess=g; this.correct=c2; this.locked=true; const lo=Math.min(g,c2),hi=Math.max(g,c2),pad=Math.max((hi-lo)*1.5,100); this.vS=Math.max(MIN_YEAR,lo-pad); this.vE=Math.min(MAX_YEAR,hi+pad); this.draw(); }
+  reset(){ this.guess=null; this.correct=null; this.locked=false; this.vS=MIN_YEAR; this.vE=MAX_YEAR; this.draw(); }
+}
+function pd(e){const dx=e.touches[0].clientX-e.touches[1].clientX,dy=e.touches[0].clientY-e.touches[1].clientY;return Math.sqrt(dx*dx+dy*dy);}
+
+// ?? �tat global ????????????????????????????????????????????
+let frise=null, currentUser=null, timerInt=null;
+let timeLeft=30, sessionScore=0, history=[], queue=[], currentQ=null, selectedYear=null, isAnswering=false;
+
+// ?? Auth ???????????????????????????????????????????????????
+onAuthChange(user => { currentUser=user; updateUserUI(); });
+
+function updateUserUI() {
+  const u=currentUser;
+  const loginArea=document.getElementById("btn-login-area");
+  const userArea=document.getElementById("user-info-area");
+  if(u){
+    loginArea.classList.add("hidden"); userArea.classList.remove("hidden");
+    const av=document.getElementById("user-avatar-el");
+    av.innerHTML=u.photoURL?`<img src="${u.photoURL}" style="width:100%;height:100%;border-radius:50%;object-fit:cover">`:(u.displayName||"?")[0].toUpperCase();
+    document.getElementById("user-name-el").textContent=u.displayName?.split(" ")[0]||"Joueur";
+  } else {
+    loginArea.classList.remove("hidden"); userArea.classList.add("hidden");
+  }
+}
+
+document.getElementById("btn-login").addEventListener("click", async ()=>{ try{ await signInWithGoogle(); }catch(e){ alert("Erreur Firebase : configure src/config/firebase-config.js"); }});
+document.getElementById("btn-logout").addEventListener("click", ()=>signOutUser());
+
+// ?? Navigation ?????????????????????????????????????????????
+function showScreen(name){
+  document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
+  document.getElementById("screen-"+name).classList.add("active");
+  document.querySelectorAll(".m-nav-btn").forEach(b=>b.classList.remove("active"));
+  const navMap={home:"nav-home",game:"nav-play",leaderboard:"nav-lb",multi:"nav-multi"};
+  if(navMap[name]) document.getElementById(navMap[name])?.classList.add("active");
+}
+
+document.getElementById("btn-header-lb").addEventListener("click",()=>{ showScreen("leaderboard"); loadLeaderboard(); });
+document.getElementById("btn-header-multi").addEventListener("click",()=>showMulti());
+document.getElementById("btn-play").addEventListener("click",()=>startGame());
+document.getElementById("btn-play-multi").addEventListener("click",()=>showMulti());
+document.getElementById("btn-play-lb").addEventListener("click",()=>{ showScreen("leaderboard"); loadLeaderboard(); });
+document.getElementById("btn-lb-play").addEventListener("click",()=>startGame());
+document.getElementById("btn-lb-refresh").addEventListener("click",()=>loadLeaderboard());
+document.getElementById("btn-lb-home").addEventListener("click",()=>showScreen("home"));
+document.getElementById("btn-replay").addEventListener("click",()=>startGame());
+document.getElementById("btn-end-lb").addEventListener("click",()=>{ showScreen("leaderboard"); loadLeaderboard(); });
+document.getElementById("btn-end-home").addEventListener("click",()=>showScreen("home"));
+document.getElementById("btn-multi-home").addEventListener("click",()=>showScreen("home"));
+document.getElementById("nav-home").addEventListener("click",()=>showScreen("home"));
+document.getElementById("nav-play").addEventListener("click",()=>startGame());
+document.getElementById("nav-multi").addEventListener("click",()=>showMulti());
+document.getElementById("nav-lb").addEventListener("click",()=>{ showScreen("leaderboard"); loadLeaderboard(); });
+
+// ?? Jeu ????????????????????????????????????????????????????
+function startGame(){
+  if(!frise) frise=new Frise(document.getElementById("frise-canvas"), y=>onYearSelected(y));
+  else frise.reset();
+  const easy=shuffle(QUESTIONS.filter(q=>q.diff==="easy")).slice(0,2);
+  const med=shuffle(QUESTIONS.filter(q=>q.diff==="medium")).slice(0,3);
+  const hard=shuffle(QUESTIONS.filter(q=>q.diff==="hard")).slice(0,2);
+  const exp=shuffle(QUESTIONS.filter(q=>q.diff==="expert")).slice(0,1);
+  queue=[...easy,...med,...hard,...exp];
+  sessionScore=0; history=[];
+  showScreen("game");
+  setTimeout(()=>{ frise.resize(); nextQ(); }, 60);
+}
+
+function nextQ(){
+  if(queue.length===0){ endGame(); return; }
+  currentQ=queue.shift(); selectedYear=null; isAnswering=true; timeLeft=30; frise.reset();
+  document.getElementById("q-text").textContent=currentQ.q;
+  document.getElementById("q-hint").textContent="?? "+currentQ.hint;
+  const db=document.getElementById("q-diff");
+  db.textContent={easy:"Facile",medium:"Moyen",hard:"Difficile",expert:"Expert"}[currentQ.diff];
+  db.className="q-badge "+currentQ.diff;
+  document.getElementById("q-cat").textContent=currentQ.cat;
+  document.getElementById("q-num").textContent=(8-queue.length)+"/8";
+  document.getElementById("score-display").textContent=sessionScore.toLocaleString("fr-FR")+" pts";
+  document.getElementById("btn-confirm").disabled=true;
+  document.getElementById("feedback-panel").classList.add("hidden");
+  document.getElementById("answer-display").textContent="Cliquez sur la frise pour indiquer votre r�ponse�";
+  document.getElementById("answer-display").style.color="";
+  startTimer();
+}
+
+function startTimer(){
+  clearInterval(timerInt); updateTimer();
+  timerInt=setInterval(()=>{ timeLeft--; updateTimer(); if(timeLeft<=0){ clearInterval(timerInt); if(isAnswering) submitAnswer(selectedYear??0,true); }}, 1000);
+}
+
+function updateTimer(){
+  document.getElementById("timer-display").textContent=timeLeft;
+  const bar=document.getElementById("timer-bar"), num=document.getElementById("timer-display");
+  bar.style.width=(timeLeft/30*100)+"%";
+  if(timeLeft<=10){ bar.style.background="#c04040"; num.style.color="#c04040"; }
+  else if(timeLeft<=20){ bar.style.background="#c07820"; num.style.color="#c07820"; }
+  else { bar.style.background="linear-gradient(90deg,#1a8020,#4ab040)"; num.style.color="#2a7a1a"; }
+}
+
+function onYearSelected(y){
+  if(!isAnswering) return;
+  selectedYear=y;
+  document.getElementById("btn-confirm").disabled=false;
+  const d=document.getElementById("answer-display");
+  d.textContent="?? "+formatY(y); d.style.color="#1a4a8a";
+}
+
+document.getElementById("btn-confirm").addEventListener("click",()=>{
+  if(!isAnswering||selectedYear===null) return;
+  clearInterval(timerInt); submitAnswer(selectedYear,false);
+});
+
+function submitAnswer(guess,timedOut){
+  isAnswering=false;
+  const r=calcScore(guess,currentQ.y,timeLeft);
+  sessionScore+=r.pts; history.push({q:currentQ,guess,result:r,timedOut});
+  frise.showResult(guess,currentQ.y);
+  document.getElementById("score-display").textContent=sessionScore.toLocaleString("fr-FR")+" pts";
+  const panel=document.getElementById("feedback-panel");
+  panel.classList.remove("hidden");
+  document.getElementById("fb-title").textContent=timedOut?"? Temps �coul� !":r.label;
+  document.getElementById("fb-title").style.color=r.color;
+  document.getElementById("fb-pts").textContent="+"+r.pts+" pts";
+  document.getElementById("fb-pts").style.color=r.color;
+  document.getElementById("fb-correct").textContent="? R�ponse : "+formatY(currentQ.y);
+  document.getElementById("fb-guess").textContent="Ta r�ponse : "+formatY(guess);
+  document.getElementById("fb-diff").textContent="�cart : "+formatDiff(r.err);
+  document.getElementById("btn-next").textContent=queue.length===0?"?? Voir les r�sultats":"? Question suivante";
+}
+
+document.getElementById("btn-next").addEventListener("click",()=>{ document.getElementById("feedback-panel").classList.add("hidden"); nextQ(); });
+document.getElementById("btn-quit").addEventListener("click",()=>{ clearInterval(timerInt); isAnswering=false; showScreen("home"); });
+
+// ?? Fin de partie ??????????????????????????????????????????
+async function endGame(){
+  clearInterval(timerInt);
+  if(currentUser) await saveScore(currentUser.uid, sessionScore, currentUser.displayName, currentUser.photoURL);
+  const t=[[7000,"? Historien de g�nie !"],[5000,"?? Excellent historien !"],[3000,"?? Bon �l�ve !"],[1500,"?? Pas mal du tout !"],[0,"?? Continue d'apprendre !"]].find(([m])=>sessionScore>=m)[1];
+  document.getElementById("end-title").textContent=t;
+  document.getElementById("end-score").textContent=sessionScore.toLocaleString("fr-FR")+" pts";
+  document.getElementById("end-save-note").textContent=currentUser?"? Score sauvegard� !":"? Connecte-toi pour sauvegarder ton score.";
+  document.getElementById("end-hist").innerHTML=history.map(({q,guess,result,timedOut})=>`
+    <div class="end-row">
+      <div><div class="end-q">${q.q}</div><div class="end-d">${timedOut?"? Temps �coul� � ":""}${formatY(q.y)} � �cart : ${formatDiff(result.err)}</div></div>
+      <div class="end-pts" style="color:${result.color}">+${result.pts}</div>
+    </div>`).join("");
+  showScreen("end");
+}
+
+// ?? Classement ?????????????????????????????????????????????
+async function loadLeaderboard(){
+  const c=document.getElementById("lb-content");
+  c.innerHTML=`<div style="text-align:center;padding:24px;color:#7a5030;font-style:italic">Chargement�</div>`;
+  try {
+    const scores=await getLeaderboard(20);
+    const medals=["??","??","??"];
+    let myStats="";
+    if(currentUser){
+      const me=scores.find(s=>s.uid===currentUser.uid);
+      if(me){ const rank=scores.indexOf(me)+1; myStats=`<div class="lb-mystats"><div class="lb-stat"><div class="lb-stat-v">#${rank}</div><div class="lb-stat-l">Classement</div></div><div class="lb-stat"><div class="lb-stat-v">${me.totalPoints.toLocaleString("fr-FR")}</div><div class="lb-stat-l">Points totaux</div></div><div class="lb-stat"><div class="lb-stat-v">${me.gamesPlayed}</div><div class="lb-stat-l">Parties</div></div></div>`; }
+    }
+    const rows=scores.map((s,i)=>{
+      const me=currentUser&&s.uid===currentUser.uid;
+      const av=`<div class="lb-av">${s.photoURL?`<img src="${s.photoURL}" style="width:100%;height:100%;border-radius:50%">`:(s.displayName||"?")[0].toUpperCase()}</div>`;
+      return `<div class="lb-row${me?" me":""}"><span style="font-family:'Cinzel',serif;font-size:0.95rem">${i<3?medals[i]:"#"+(i+1)}</span>${av}<span style="font-size:0.84rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${s.displayName||"Anonyme"}${me?" <em>(toi)</em>":""}</span><span class="lb-pts">${(s.totalPoints||0).toLocaleString("fr-FR")} pts</span><span class="lb-games">${s.gamesPlayed||0} parties</span></div>`;
+    }).join("");
+    c.innerHTML=`${myStats}<div class="lb-wrap"><div class="lb-head"><span>Rang</span><span></span><span>Joueur</span><span>Points</span><span>Parties</span></div>${rows||'<div style="text-align:center;padding:20px;color:#7a5030;font-style:italic">Aucun score encore !</div>'}</div>`;
+  } catch(e){ c.innerHTML=`<div style="text-align:center;padding:24px;color:#8a2010">? Impossible de charger. V�rifie ta config Firebase.</div>`; }
+}
+
+// ?? Multijoueur ????????????????????????????????????????????
+function showMulti(){
+  if(!currentUser){ alert("Connecte-toi d'abord pour jouer en multijoueur !"); return; }
+  showScreen("multi");
+}
+
+document.getElementById("tab-create").addEventListener("click",function(){ document.querySelectorAll(".m-tab").forEach(t=>t.classList.remove("active")); this.classList.add("active"); document.getElementById("multi-create-panel").classList.remove("hidden"); document.getElementById("multi-join-panel").classList.add("hidden"); });
+document.getElementById("tab-join").addEventListener("click",function(){ document.querySelectorAll(".m-tab").forEach(t=>t.classList.remove("active")); this.classList.add("active"); document.getElementById("multi-create-panel").classList.add("hidden"); document.getElementById("multi-join-panel").classList.remove("hidden"); });
+
+let roomUnsub=null, currentRoomId=null, myReady=false;
+
+document.getElementById("btn-create-room").addEventListener("click", async ()=>{
+  if(!currentUser) return;
+  try {
+    document.getElementById("btn-create-room").disabled=true;
+    currentRoomId=await createRoom(currentUser);
+    listenToRoom(currentRoomId);
+  } catch(e){ alert("Erreur : "+e.message); }
+  finally { document.getElementById("btn-create-room").disabled=false; }
+});
+
+document.getElementById("btn-join-room").addEventListener("click", async ()=>{
+  const code=document.getElementById("room-input").value.trim().toUpperCase();
+  if(code.length<4){ alert("Code invalide !"); return; }
+  if(!currentUser) return;
+  try {
+    document.getElementById("btn-join-room").disabled=true;
+    await joinRoom(code,currentUser);
+    currentRoomId=code; listenToRoom(code);
+  } catch(e){ alert("Erreur : "+e.message); }
+  finally { document.getElementById("btn-join-room").disabled=false; }
+});
+
+function listenToRoom(roomId){
+  if(roomUnsub) roomUnsub();
+  roomUnsub=listenRoom(roomId, data=>{
+    if(data.status==="playing"){ if(roomUnsub){roomUnsub();roomUnsub=null;} startGame(); return; }
+    document.getElementById("multi-create-panel").classList.add("hidden");
+    document.getElementById("multi-join-panel").classList.add("hidden");
+    document.getElementById("multi-lobby").classList.remove("hidden");
+    document.getElementById("room-code-display").textContent=data.id;
+    renderLobby(document.getElementById("lobby-players"),data,currentUser.uid,{
+      onReady:(r)=>setReady(roomId,currentUser.uid,r),
+      onStart:()=>startMultiplayerGame(roomId)
+    });
+    const allReady=Object.values(data.players||{}).every(p=>p.ready);
+    const isHost=data.host===currentUser.uid;
+    document.getElementById("btn-start-multi").style.display=(isHost&&allReady&&Object.keys(data.players||{}).length>=2)?"":"none";
   });
 }
 
-// ──────────────────────────────────────────────────────────
-//  SERVICE WORKER
-// ──────────────────────────────────────────────────────────
-if ("serviceWorker" in navigator) {
-  navigator.serviceWorker.register("sw.js").catch(() => {});
-}
+document.getElementById("btn-ready").addEventListener("click",()=>{
+  myReady=!myReady;
+  document.getElementById("btn-ready").textContent=myReady?"? Pas pr�t":"? Je suis pr�t !";
+  if(currentRoomId&&currentUser) setReady(currentRoomId,currentUser.uid,myReady);
+});
+document.getElementById("btn-start-multi").addEventListener("click",()=>{ if(currentRoomId) startMultiplayerGame(currentRoomId); });
+
+// ?? PWA ????????????????????????????????????????????????????
+if("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js").catch(()=>{});
 </script>
 </body>
 </html>
